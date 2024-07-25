@@ -73,19 +73,19 @@ jobs:
 
       - name: auth 서버 Docker 이미지 빌드 후 Docker Hub에 업로드
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/auth-server:latest -f auth/Dockerfile auth
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/auth-server:latest -f auth/Dockerfile
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/auth-server:latest
         # auth 서버 Docker 이미지를 빌드하고 Docker Hub에 업로드
 
       - name: chat 서버 Docker 이미지 빌드 후 Docker Hub에 업로드
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/chat-server:latest -f chat/Dockerfile chat
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/chat-server:latest -f chat/Dockerfile
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/chat-server:latest
         # chat 서버 Docker 이미지를 빌드하고 Docker Hub에 업로드
 
       - name: core 서버 Docker 이미지 빌드 후 Docker Hub에 업로드
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/core-server:latest -f core/Dockerfile core
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/core-server:latest -f core/Dockerfile
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/core-server:latest
         # core 서버 Docker 이미지를 빌드하고 Docker Hub에 업로드
 
