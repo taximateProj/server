@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
         # 리포지토리를 서브모듈 포함해서 checkout
 
       - name: JDK 17 설정
@@ -97,5 +97,5 @@ jobs:
           git commit -m "빌드 아티팩트 업데이트"
           git push origin develop
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         # 빌드된 결과물을 GitHub에 푸시
