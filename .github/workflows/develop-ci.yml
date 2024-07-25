@@ -85,5 +85,5 @@ jobs:
           git commit -m "빌드 아티팩트 업데이트"
           git push origin develop
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         # 빌드된 결과물을 GitHub에 푸시
