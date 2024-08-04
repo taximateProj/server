@@ -1,4 +1,3 @@
-
 plugins {
     java
     id("org.springframework.boot") version "3.3.2"
@@ -17,6 +16,7 @@ allprojects{
         mavenCentral()
     }
 }
+
 subprojects {
     apply(plugin = "java")
     apply(plugin = "org.springframework.boot")
@@ -33,8 +33,10 @@ subprojects {
             languageVersion = JavaLanguageVersion.of(17)
         }
     }
+
     dependencies {
         implementation("org.springframework.boot:spring-boot-starter")
+        implementation("org.springframework.boot:spring-boot-starter-web")
         developmentOnly ("org.springframework.boot:spring-boot-devtools")
 
         compileOnly ("org.projectlombok:lombok")

@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: chat
+  profiles:
+    include: kafka, mongo
+logging:
+  level:
+    chat: trace

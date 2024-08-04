@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: common
+  profiles:
+    include: mongo, kafka
+
+

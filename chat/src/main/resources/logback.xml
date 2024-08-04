@@ -1,0 +1,42 @@
+<configuration>
+
+    <!-- 콘솔 로그 설정 (색상 추가) -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 채팅 애플리케이션 로그 파일 설정 -->
+    <appender name="CHAT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/chat.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/chat.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <!-- 채팅 메시지 전송 및 전달 부분에 대한 로그 레벨을 DEBUG로 설정 -->
+    <logger name="com.umc.chat.websocket.controller.StompChatController" level="DEBUG">
+        <appender-ref ref="CHAT_FILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="com.umc.chat.chatting.chatconsumer.KafkaChatConsumer" level="DEBUG">
+        <appender-ref ref="CHAT_FILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="com.umc.chat.chatting.chatproducer.KafkaChatProducer" level="DEBUG">
+        <appender-ref ref="CHAT_FILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+</configuration>
