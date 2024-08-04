@@ -1,0 +1,4 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/chatdb}  # MongoDB URI를 환경 변수에서 읽어오고, 설정되지 않은 경우 기본값을 사용
