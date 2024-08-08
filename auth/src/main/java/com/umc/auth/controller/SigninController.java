@@ -1,6 +1,8 @@
 package com.umc.auth.controller;
 
+
 import com.umc.auth.dto.TokenDto;
+import com.umc.auth.oauth2.OAuth2SuccessHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/sign")
-public class SignInController {
+public class SigninController {
 
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
@@ -24,6 +26,7 @@ public class SignInController {
                                      @RequestParam(name = "refreshToken") String refreshToken) {
         return new ResponseEntity(TokenDto.of(accessToken, refreshToken), HttpStatus.OK);
     }
+
 
     @GetMapping("/reissue")
     public ResponseEntity reissueToken(HttpServletRequest request, HttpServletResponse response) {

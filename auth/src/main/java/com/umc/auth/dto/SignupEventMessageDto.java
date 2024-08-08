@@ -2,7 +2,7 @@ package com.umc.auth.dto;
 
 
 
-import com.umc.member.domain.enums.Role;
+import com.umc.auth.entity.enums.Role;
 import lombok.Builder;
 
 import java.util.UUID;

@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
+
 @RestController
 @RequiredArgsConstructor
-public class AccessTokenController {
+public class TokenController {
 
     private final TokenProvider tokenProvider;
     private final JwtFilter jwtFilter;

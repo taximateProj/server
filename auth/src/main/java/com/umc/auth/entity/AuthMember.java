@@ -1,16 +1,20 @@
 package com.umc.auth.entity;
 
-import com.umc.member.domain.common.BaseEntity;
-import com.umc.member.domain.enums.Role;
+
+import com.umc.auth.entity.common.BaseEntity;
+import com.umc.auth.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
+@DynamicUpdate
+@DynamicInsert
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -38,4 +42,3 @@ public class AuthMember extends BaseEntity {
 
 
 }
-

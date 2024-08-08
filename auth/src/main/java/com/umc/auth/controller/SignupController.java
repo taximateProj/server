@@ -5,7 +5,6 @@ import com.umc.auth.dto.SignupEventMessageDto;
 import com.umc.auth.dto.memberdto.MemberJoinDto;
 import com.umc.auth.jwt.TokenProvider;
 import com.umc.auth.service.SignupService;
-import com.umc.member.apiPayload.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,12 +15,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-public class SignUpController {
+public class SignupController {
+
     private final SignupService signupService;
     private final TokenProvider tokenProvider;
 
     @PostMapping("/signup")
-    public ApiResponse<SignupEventMessageDto> SignUp(HttpServletRequest request) throws IOException {
+    public ApiResponse<SignupEventMessageDto> SignUp(HttpServletRequest request) throws IOException{
         // 레포지토리에 저장되어 있는 멤버불러와서 같이 dto로 넘기는 방식?
 //        AuthMember authMember = signupService.joinMember(request);
         // 헤더에 access 토큰 있다고 가정 - 헤더의 토큰 롤 검사 -> 롤이 not sign up user 이면 가입 절차 진행
@@ -46,4 +46,5 @@ public class SignUpController {
 
         return objectMapper.readValue(jsonData, MemberJoinDto.class);
     }
+
 }

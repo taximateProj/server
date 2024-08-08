@@ -9,10 +9,10 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .exposedHeaders("Set-Cookie")
                 .allowedOrigins("http://localhost:3000") // 허용할 출처
-                .allowedMethods("GET", "POST") // 허용할 HTTP method
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD") // 허용할 HTTP method
                 .allowCredentials(true) // 쿠키 인증 요청 허용
+                .allowedHeaders("*")
                 .maxAge(3000); // 원하는 시간만큼 pre-flight 리퀘스트를 캐싱
     }
 }

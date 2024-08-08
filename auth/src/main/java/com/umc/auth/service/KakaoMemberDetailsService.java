@@ -1,67 +1,77 @@
 package com.umc.auth.service;
 
-
-import com.umc.auth.dto.oauth2dto.CustomOAuth2User;
-import com.umc.auth.dto.oauth2dto.KakaoResponseDto;
-import com.umc.auth.dto.oauth2dto.OAuth2Response;
-import com.umc.member.domain.Member;
-import com.umc.member.domain.enums.Role;
-import com.umc.member.dto.MemberDto;
-import com.umc.member.repository.MemberRepository;
+import com.example.auth_practice.domain.AuthMember;
+import com.example.auth_practice.domain.enums.Role;
+import com.example.auth_practice.dto.memberdto.AuthMemberDto;
+import com.example.auth_practice.dto.oauth2dto.CustomOAuth2User;
+import com.example.auth_practice.dto.oauth2dto.KakaoResponseDto;
+import com.example.auth_practice.dto.oauth2dto.OAuth2Response;
+import com.example.auth_practice.repository.AuthMemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
 
-    private final MemberRepository memberRepository;
+    private final AuthMemberRepository authmemberRepository;
 
     @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        OAuth2Response oAuth2Response = new KakaoResponseDto(oAuth2User.getAttributes()); // 이메일 처리
+//        System.out.println(oAuth2User.getAttributes());
+//        KakaoUserInfo oAuth2Response = new KakaoUserInfo(oAuth2User.getAttributes()); //email 데이터의 구조 때문에 따로 뺌
+        OAuth2Response oAuth2Response = new KakaoResponseDto(oAuth2User.getAttributes());
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
         System.out.println(username);
 
-        Member existData = memberRepository.findByUsername(username);
+        AuthMember existData = authmemberRepository.findByUsername(username);
         System.out.println(existData);
 
-        String role = "ROLE_USER";
+
 
         if (existData == null) {
             System.out.println("I first time login!");
 
 
-            memberRepository.save(Member.builder()
-                    .role(Role.USER)
+            authmemberRepository.save(AuthMember.builder()
+                    .role(Role.NOT_SIGNUP_USER)
                     .email(oAuth2Response.getEmail())
                     .username(username)
                     .build());
 
-            MemberDto memberDto = new MemberDto();
-            memberDto.setUsername(username);
-            memberDto.setRole(role);
-
-            return new CustomOAuth2User(memberDto);
+            AuthMemberDto authmemberDto = new AuthMemberDto();
+            authmemberDto.setUsername(username);
+            authmemberDto.setRole("not_signup_user");
 
 
+            return new CustomOAuth2User(authmemberDto);
+        } else if (existData.getRole().equals(Role.NOT_SIGNUP_USER)) {
+            // 가입되지 않은 유저 - 가입 화면으로 리다이렉트
+            return null; // -> 오류 반환해줘야하나?
 
         } else { // 왜 있을 때는 다시 set 하지?? 그냥 이미 있는 유저라고 반환해야되는거 아닌가? -> login 하면서 회원 정보 update 해주는 정책 (이거는 정해야할듯?)
             System.out.println("I login!");
             existData.setUsername(username);
             existData.setEmail(oAuth2Response.getEmail());
-            memberRepository.save(existData);
+            authmemberRepository.save(existData);
 
-            MemberDto memberDto = new MemberDto();
+            AuthMemberDto memberDto = new AuthMemberDto();
             memberDto.setUsername(username);
+
+            String role;
+            if (existData.getRole().equals(Role.USER)) {
+                role = "user";
+            } else {
+                role = "admin";
+            }
             memberDto.setRole(role);
 
             return new CustomOAuth2User(memberDto);

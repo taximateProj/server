@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Map;
 
-public class KakaoResponseDto implements OAuth2Response {
+public class KakaoResponseDto implements OAuth2Response { // 이메일 불러와서 변환하는데 쓰임
 
     public static final String KAKAO_ACCOUNT = "kakao_account";
     public static final String EMAIL = "email";

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class KakaoMemberDetails implements OAuth2User { //Authorization 만들 때 쓰는 dto
+public class KakaoMemberDetails implements OAuth2User {
 
     private final String email;
     private final List<? extends GrantedAuthority> authorities;
