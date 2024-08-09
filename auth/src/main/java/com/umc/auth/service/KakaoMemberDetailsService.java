@@ -1,12 +1,13 @@
 package com.umc.auth.service;
 
-import com.example.auth_practice.domain.AuthMember;
-import com.example.auth_practice.domain.enums.Role;
-import com.example.auth_practice.dto.memberdto.AuthMemberDto;
-import com.example.auth_practice.dto.oauth2dto.CustomOAuth2User;
-import com.example.auth_practice.dto.oauth2dto.KakaoResponseDto;
-import com.example.auth_practice.dto.oauth2dto.OAuth2Response;
-import com.example.auth_practice.repository.AuthMemberRepository;
+
+import com.umc.auth.dto.memberdto.AuthMemberDto;
+import com.umc.auth.dto.oauth2dto.CustomOAuth2User;
+import com.umc.auth.dto.oauth2dto.KakaoResponseDto;
+import com.umc.auth.dto.oauth2dto.OAuth2Response;
+import com.umc.auth.entity.AuthMember;
+import com.umc.auth.entity.enums.Role;
+import com.umc.auth.repository.AuthMemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

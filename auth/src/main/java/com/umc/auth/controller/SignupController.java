@@ -46,5 +46,4 @@ public class SignupController {
 
         return objectMapper.readValue(jsonData, MemberJoinDto.class);
     }
-
 }

@@ -32,6 +32,4 @@ public class RefreshToken {
                 .get(0)
                 .getAuthority();
     }
-
-
 }

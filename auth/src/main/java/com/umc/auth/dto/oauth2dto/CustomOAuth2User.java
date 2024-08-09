@@ -1,6 +1,7 @@
 package com.umc.auth.dto.oauth2dto;
 
-import com.example.auth_practice.dto.memberdto.AuthMemberDto;
+
+import com.umc.auth.dto.memberdto.AuthMemberDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

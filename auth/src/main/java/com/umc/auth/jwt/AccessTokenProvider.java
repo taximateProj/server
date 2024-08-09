@@ -21,6 +21,5 @@ public class AccessTokenProvider {
             TokenDto tokenDto = tokenProvider.reIssueAccessToken(refreshToken);
             return tokenDto;
         }
-
     }
 }

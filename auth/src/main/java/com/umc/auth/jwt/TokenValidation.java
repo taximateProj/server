@@ -18,9 +18,6 @@ import java.security.Key;
 public class TokenValidation {
 
     private final String secretKey_string;
-    private final long accessTokenValidityMilliSeconds;
-    private final long refreshTokenValidityMilliSeconds;
-    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
     private Key secretkey;
 
@@ -28,9 +25,6 @@ public class TokenValidation {
                          @Value("${spring.jwt.access-token-validity-in-seconds}") long accessTokenValiditySeconds,
                          @Value("${spring.jwt.refresh-token-validity-in-seconds}") long refreshTokenValiditySeconds, RefreshTokenRedisRepository refreshTokenRedisRepository) {
         this.secretKey_string = secretKey;
-        this.accessTokenValidityMilliSeconds = accessTokenValiditySeconds * 1000;
-        this.refreshTokenValidityMilliSeconds = refreshTokenValiditySeconds * 1000;
-        this.refreshTokenRedisRepository = refreshTokenRedisRepository;
     }
     @PostConstruct
     public void initKey() {
@@ -68,6 +62,7 @@ public class TokenValidation {
         }
     }
 
+    //uuid 가져오는 메서드
 
 
 
