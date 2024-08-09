@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class TokenProvider {
 
     private static final String AUTH_KEY = "AUTHORITY";
-    private static final String AUTH_USERNAME = "USER_NAME";
+    private static final String AUTH_UUID = "UUID";
 
     private final String secretKey_string;
     private final long accessTokenValidityMilliSeconds;
@@ -56,21 +56,21 @@ public class TokenProvider {
     }
 
     //access, refresh Token 생성
-    public TokenDto createToken(String username, String role) {
+    public TokenDto createToken(String uuid, String role) {
         long now = (new Date()).getTime();
 
         Date accessTokenValidity = new Date(now + this.accessTokenValidityMilliSeconds);
         Date refreshTokenValidity = new Date(now + this.refreshTokenValidityMilliSeconds);
 
         String accessToken = Jwts.builder()
-                    .addClaims(Map.of(AUTH_USERNAME, username))
+                    .addClaims(Map.of(AUTH_UUID, uuid))
                 .addClaims(Map.of(AUTH_KEY, role))
                 .signWith(secretkey, SignatureAlgorithm.HS256)
                 .setExpiration(accessTokenValidity)
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .addClaims(Map.of(AUTH_USERNAME, username))
+                .addClaims(Map.of(AUTH_UUID, uuid))
                 .addClaims(Map.of(AUTH_KEY, role))
                 .signWith(secretkey, SignatureAlgorithm.HS256)
                 .setExpiration(refreshTokenValidity)
@@ -90,14 +90,14 @@ public class TokenProvider {
         return claims.get(AUTH_KEY, String.class);
     }
 
-    public String getUsername(String token) {
+    public String getUuid(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secretkey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.get(AUTH_USERNAME, String.class);
+        return claims.get(AUTH_UUID, String.class);
     }
 
 
@@ -122,7 +122,7 @@ public class TokenProvider {
 
 
         KakaoMemberDetails principal = new KakaoMemberDetails(
-                (String) claims.get(AUTH_USERNAME),
+                (String) claims.get(AUTH_UUID),
                 simpleGrantedAuthorities,
                 Map.of());
 

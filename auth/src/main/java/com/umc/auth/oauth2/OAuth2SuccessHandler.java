@@ -48,7 +48,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
 
-        TokenDto tokenDto = tokenProvider.createToken(member.getUsername(), member.getRole().name());
+        TokenDto tokenDto = tokenProvider.createToken(member.getUuid().toString(), member.getRole().name());
 
         saveRefreshTokenOnRedis(member, tokenDto);
 

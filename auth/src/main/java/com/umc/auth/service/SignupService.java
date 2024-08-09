@@ -1,9 +1,10 @@
 package com.umc.auth.service;
 
-import com.example.auth_practice.domain.AuthMember;
-import com.example.auth_practice.dto.SignupEventMessageDto;
-import com.example.auth_practice.dto.memberdto.MemberJoinDto;
-import com.example.auth_practice.repository.AuthMemberRepository;
+
+import com.umc.auth.dto.SignupEventMessageDto;
+import com.umc.auth.dto.memberdto.MemberJoinDto;
+import com.umc.auth.entity.AuthMember;
+import com.umc.auth.repository.AuthMemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
