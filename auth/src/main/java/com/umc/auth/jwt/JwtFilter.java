@@ -3,6 +3,8 @@ package com.umc.auth.jwt;
 
 import com.umc.auth.dto.TokenDto;
 import com.umc.common.TokenValidation;
+import com.umc.common.error.code.AuthErrorCode;
+import com.umc.common.error.exception.CustomException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,17 +42,19 @@ public class JwtFilter extends OncePerRequestFilter {
         if (tokenValidation.validateToken(accessToken) && tokenValidation.validateExpiredToken(accessToken)) {
             SecurityContextHolder.getContext().setAuthentication(tokenProvider.getAuthentication(accessToken));
         }
-
-        if (!tokenValidation.validateExpiredToken(accessToken) && tokenValidation.validateToken(accessToken)) {// token 검사하는 로직 다시 보기
+        if (!tokenValidation.validateExpiredToken(accessToken) && tokenValidation.validateToken(accessToken) && getTokenFromHeader(request, REFRESH_HEADER) == null) {
+            throw new CustomException(AuthErrorCode.TOKEN_EXPIRED);
+        };
+        if (!tokenValidation.validateExpiredToken(accessToken) && tokenValidation.validateToken(accessToken) && getTokenFromHeader(request, REFRESH_HEADER) != null) {// token 검사하는 로직 다시 보기
             String refreshToken = getTokenFromHeader(request, REFRESH_HEADER);
-            if (refreshToken != null) {
-                throw new IllegalStateException("access 토큰 만료 재발급 받으세요");
-            }
+
             if (tokenValidation.validateToken(refreshToken) && tokenValidation.validateExpiredToken(refreshToken)) {
                 TokenDto tokenDto = tokenProvider.reIssueAccessToken(refreshToken);
                 SecurityContextHolder.getContext().setAuthentication(tokenProvider.getAuthentication(tokenDto.getAccessToken()));
 
                 redirectReissueURI(request, response, tokenDto);
+            } else {
+                throw new CustomException(AuthErrorCode.INVALID_TOKEN_FORMAT);
             }
         }
 
