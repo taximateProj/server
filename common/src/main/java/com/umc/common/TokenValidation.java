@@ -1,11 +1,8 @@
-package com.umc.auth.jwt;
+package com.umc.common;
 
 
-import com.umc.auth.repository.RefreshTokenRedisRepository;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -18,12 +15,12 @@ import java.security.Key;
 public class TokenValidation {
 
     private final String secretKey_string;
+    private static final String AUTH_KEY = "AUTHORITY";
+    private static final String AUTH_UUID = "UUID";
 
     private Key secretkey;
 
-    public TokenValidation(@Value("${spring.jwt.secret_key}") String secretKey,
-                         @Value("${spring.jwt.access-token-validity-in-seconds}") long accessTokenValiditySeconds,
-                         @Value("${spring.jwt.refresh-token-validity-in-seconds}") long refreshTokenValiditySeconds, RefreshTokenRedisRepository refreshTokenRedisRepository) {
+    public TokenValidation(@Value("${spring.jwt.secret_key}") String secretKey) {
         this.secretKey_string = secretKey;
     }
     @PostConstruct
@@ -63,7 +60,25 @@ public class TokenValidation {
     }
 
     //uuid 가져오는 메서드
+    public String getRole(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretkey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
 
+        return claims.get(AUTH_KEY, String.class);
+    }
+
+    public String getUuid(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretkey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get(AUTH_UUID, String.class);
+    }
 
 
 }

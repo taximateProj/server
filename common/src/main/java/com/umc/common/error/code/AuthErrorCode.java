@@ -15,7 +15,10 @@ public enum AuthErrorCode implements ErrorCode{
     LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "AUTH-003", "로그인에 실패했습니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "AUTH-004", "토큰의 유효기간이 만료되었습니다."),
     INVALID_TOKEN_FORMAT(HttpStatus.BAD_REQUEST, "AUTH-005", "잘못된 토큰 형식입니다."),
-    REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "AUTH-006", "쿠키에 refreshToken이 없습니다.");
+    REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "AUTH-006", "쿠키에 refreshToken이 없습니다."),
+
+    // 추가 가입 절차
+    ALREADY_SIGNEDUP_USER(HttpStatus.FORBIDDEN, "SIGNUP-001", "이미 가입된 사용자 입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

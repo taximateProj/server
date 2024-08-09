@@ -80,26 +80,6 @@ public class TokenProvider {
 
     }
 
-    public String getRole(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretkey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.get(AUTH_KEY, String.class);
-    }
-
-    public String getUuid(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretkey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.get(AUTH_UUID, String.class);
-    }
-
 
     // 토큰으로부터 Authentication 객체 만들어서 리턴하는 메소드
     public Authentication getAuthentication(String token) {

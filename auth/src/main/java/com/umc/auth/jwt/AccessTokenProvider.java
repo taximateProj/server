@@ -2,6 +2,7 @@ package com.umc.auth.jwt;
 
 
 import com.umc.auth.dto.TokenDto;
+import com.umc.common.TokenValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.umc.auth.dto.SignupEventMessageDto;
 
 import com.umc.auth.dto.memberdto.MemberJoinDto;
-import com.umc.auth.jwt.TokenProvider;
+import com.umc.common.TokenValidation;
 import com.umc.auth.service.SignupService;
 import com.umc.common.response.JsendCommonResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 public class SignupController {
 
     private final SignupService signupService;
-    private final TokenProvider tokenProvider;
+    private final TokenValidation tokenValidation;
 
     @PostMapping("/signup")
     public JsendCommonResponse<SignupEventMessageDto> SignUp(HttpServletRequest request) throws IOException{
@@ -29,8 +28,8 @@ public class SignupController {
 //        AuthMember authMember = signupService.joinMember(request);
         // 헤더에 access 토큰 있다고 가정 - 헤더의 토큰 롤 검사 -> 롤이 not sign up user 이면 가입 절차 진행
         String accessToken = request.getHeader("Authorization"); // jwt 열어서 롤 확인해야되는데 어떻게 하지?
-        String role = tokenProvider.getRole(accessToken); // role 가져오기 -> not ~user 맞는지 검사
-        String uuid = tokenProvider.getUuid(accessToken); // username 가져오기
+        String role = tokenValidation.getRole(accessToken); // role 가져오기 -> not ~user 맞는지 검사
+        String uuid = tokenValidation.getUuid(accessToken); // username 가져오기
 
         if (!role.equals("not_signup_user")) {
             throw new IllegalStateException("이미 등록된 유저임");

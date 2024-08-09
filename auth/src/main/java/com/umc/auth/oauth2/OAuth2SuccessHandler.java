@@ -9,6 +9,8 @@ import com.umc.auth.entity.enums.Role;
 import com.umc.auth.jwt.TokenProvider;
 import com.umc.auth.repository.AuthMemberRepository;
 import com.umc.auth.repository.RefreshTokenRedisRepository;
+import com.umc.common.error.code.AuthErrorCode;
+import com.umc.common.error.exception.CustomException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,9 +46,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         AuthMember member = memberRepository.findByUsername(username);// username이 키
         if (member == null) {
-            throw new IllegalStateException("이미 등록된 유저임");
+            throw new CustomException(AuthErrorCode.ALREADY_SIGNEDUP_USER);
         }
-
 
         TokenDto tokenDto = tokenProvider.createToken(member.getUuid().toString(), member.getRole().name());
 
@@ -76,7 +77,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
         simpleGrantedAuthorities.add(new SimpleGrantedAuthority(member.getRole().name()));
         refreshTokenRepository.save(RefreshToken.builder()
-                .id(member.getEmail())
+                .id(member.getUuid().toString())
                 .authorities(simpleGrantedAuthorities)
                 .refreshToken(tokenDto.getRefreshToken())
                 .build());
