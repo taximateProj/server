@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class SignupService {
@@ -16,16 +18,16 @@ public class SignupService {
     private final AuthMemberRepository authMemberRepository;
 
     @Transactional
-    public SignupEventMessageDto joinMember(MemberJoinDto request, String username) {
+    public SignupEventMessageDto joinMember(MemberJoinDto request, String uuid) {
 
-        AuthMember authMember = authMemberRepository.findByUsername(username);
+        AuthMember authMember = authMemberRepository.findByUuid(UUID.fromString(uuid));
 
         return SignupEventMessageDto.builder()
-                .uuid(authMember.getUuid())
+                .uuid(UUID.fromString(uuid))
                 .name(request.getName())
                 .email(authMember.getEmail())
                 .role(authMember.getRole())
-                .username(username)
+                .username(authMember.getUsername())
                 .school(request.getSchool())
                 .accountNumber(request.getAccountNumber())
                 .build();

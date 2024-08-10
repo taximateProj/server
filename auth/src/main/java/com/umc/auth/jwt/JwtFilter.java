@@ -65,7 +65,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     Boolean isRequestPassURI(HttpServletRequest request) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/") || request.getRequestURI().startsWith("/")) {
+        if (request.getRequestURI().startsWith("/") || request.getRequestURI().startsWith("/signup")) {
             return true;
         }
         else if (request.getRequestURI().startsWith("/access_token")) {

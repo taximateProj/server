@@ -10,12 +10,14 @@ import com.umc.auth.entity.enums.Role;
 import com.umc.auth.repository.AuthMemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
@@ -25,13 +27,18 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
     @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        if (oAuth2User == null) {
+            log.error("OAuth2User is null");
+        }
+
 
 //        System.out.println(oAuth2User.getAttributes());
 //        KakaoUserInfo oAuth2Response = new KakaoUserInfo(oAuth2User.getAttributes()); //email 데이터의 구조 때문에 따로 뺌
         OAuth2Response oAuth2Response = new KakaoResponseDto(oAuth2User.getAttributes());
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
-        System.out.println(username);
+        log.info("Username is {}", username);
 
         AuthMember existData = authmemberRepository.findByUsername(username);
         System.out.println(existData);
@@ -85,3 +92,4 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
 //                oAuth2User.getAttributes());
     }
 }
+

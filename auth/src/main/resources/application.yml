@@ -60,5 +60,7 @@ spring:
 
 
 
-
+logging:
+  level:
+    root: debug
 

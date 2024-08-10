@@ -37,6 +37,7 @@ public class TokenValidation {
                     .setSigningKey(secretkey)
                     .build()
                     .parseClaimsJws(token);
+
             return true;
         } catch (io.jsonwebtoken.security.SignatureException | MalformedJwtException e) {
             return false;

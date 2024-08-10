@@ -4,9 +4,11 @@ package com.umc.auth.dto;
 
 import com.umc.auth.entity.enums.Role;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.UUID;
 
+@Getter
 @Builder
 public class SignupEventMessageDto { // 카프카로 보낼 메시지
     private UUID uuid; // 생성하기

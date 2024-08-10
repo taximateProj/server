@@ -25,9 +25,9 @@ public class SigninController {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @GetMapping("/login/kakao")
-    public ResponseEntity loginKakao(@RequestParam(name = "accessToken") String accessToken,
+    public JsendCommonResponse<TokenDto> loginKakao(@RequestParam(name = "accessToken") String accessToken,
                                      @RequestParam(name = "refreshToken") String refreshToken) {
-        return new ResponseEntity(TokenDto.of(accessToken, refreshToken), HttpStatus.OK);
+        return JsendCommonResponse.success(new TokenDto(accessToken, refreshToken));
     }
 
 

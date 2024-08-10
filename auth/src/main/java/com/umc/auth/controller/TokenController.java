@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -29,11 +30,12 @@ public class TokenController {
     private static final String ACCESS_HEADER = "AccessToken";
 
     @GetMapping("/access_token")
-    public JsendCommonResponse<String> access_token(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public ResponseEntity<TokenDto> access_token(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String refreshToken = request.getHeader(REFRESH_HEADER);
         System.out.println(refreshToken);
         TokenDto tokenDto = accessTokenProvider.issueAccessToken(refreshToken);
         response.addHeader(ACCESS_HEADER, tokenDto.getAccessToken());
-        return JsendCommonResponse.success("AccessToken을 발급했습니다. ");
+        return ResponseEntity.ok(tokenDto);
     }
+
 }
