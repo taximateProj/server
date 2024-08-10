@@ -2,6 +2,7 @@ package com.umc.auth.jwt;
 
 
 import com.umc.auth.dto.TokenDto;
+
 import com.umc.common.TokenValidation;
 import com.umc.common.error.code.AuthErrorCode;
 import com.umc.common.error.exception.CustomException;
@@ -21,7 +22,7 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor // ??
+@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private static final String ACCESS_HEADER = "AccessToken";

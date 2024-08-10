@@ -6,9 +6,12 @@ import com.umc.auth.dto.SignupEventMessageDto;
 import com.umc.auth.dto.memberdto.MemberJoinDto;
 import com.umc.common.TokenValidation;
 import com.umc.auth.service.SignupService;
+import com.umc.common.error.code.AuthErrorCode;
+import com.umc.common.error.exception.CustomException;
 import com.umc.common.response.JsendCommonResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +35,7 @@ public class SignupController {
         String uuid = tokenValidation.getUuid(accessToken); // username 가져오기
 
         if (!role.equals("not_signup_user")) {
-            throw new IllegalStateException("이미 등록된 유저임");
+            throw new CustomException(AuthErrorCode.ALREADY_SIGNEDUP_USER);
         }
         // MemberJoinDto로 만들기 -> 서비스 단에 전달
         MemberJoinDto memberJoinDto = memberJoinConverter(request); // request -> MemberJoinDto
