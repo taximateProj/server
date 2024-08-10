@@ -23,6 +23,7 @@ public class TokenValidation {
     public TokenValidation(@Value("${spring.jwt.secret_key}") String secretKey) {
         this.secretKey_string = secretKey;
     }
+
     @PostConstruct
     public void initKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey_string);

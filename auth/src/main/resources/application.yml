@@ -25,8 +25,9 @@ spring:
         format_sql: true
         use_sql_comments: true
         hbm2ddl:
-          auto: create
+          auto: update
         default_batch_fetch_size: 1000
+
   security:
     oauth2:
       client:
@@ -48,10 +49,13 @@ spring:
             user-info-uri: ${KAKAO_USER_INFO_URI}
             user-name-attribute: id
 
+
+
+
   jwt:
-    secret_key: ${JWT_SECRET_KEY}
-    access-token-validity-in-seconds: ${JWT_ACCESS_TOKEN_VALIDITY}
-    refresh-token-validity-in-seconds: ${JWT_REFRESH_TOKEN_VALIDITY} #(1일)
+    secret_key: fhdusjsiealkasdkfjdkjfhkjdhkfadhskjfhskdjhksdjhksfjdhwere
+    access-token-validity-in-seconds: 30000
+    refresh-token-validity-in-seconds: 86400 #(1일)
 
 
 

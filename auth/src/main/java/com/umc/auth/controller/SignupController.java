@@ -30,11 +30,11 @@ public class SignupController {
         // 레포지토리에 저장되어 있는 멤버불러와서 같이 dto로 넘기는 방식?
 //        AuthMember authMember = signupService.joinMember(request);
         // 헤더에 access 토큰 있다고 가정 - 헤더의 토큰 롤 검사 -> 롤이 not sign up user 이면 가입 절차 진행
-        String accessToken = request.getHeader("Authorization"); // jwt 열어서 롤 확인해야되는데 어떻게 하지?
+        String accessToken = request.getHeader("AccessToken"); // jwt 열어서 롤 확인해야되는데 어떻게 하지?
         String role = tokenValidation.getRole(accessToken); // role 가져오기 -> not ~user 맞는지 검사
         String uuid = tokenValidation.getUuid(accessToken); // username 가져오기
 
-        if (!role.equals("not_signup_user")) {
+        if (!role.equals("NOT_SIGNUP_USER")) {
             throw new CustomException(AuthErrorCode.ALREADY_SIGNEDUP_USER);
         }
         // MemberJoinDto로 만들기 -> 서비스 단에 전달

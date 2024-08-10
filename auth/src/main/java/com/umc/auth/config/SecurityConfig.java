@@ -6,6 +6,7 @@ import com.umc.auth.oauth2.OAuth2SuccessHandler;
 import com.umc.auth.service.KakaoMemberDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@PropertySource("classpath:.env")
 public class SecurityConfig {
     private final KakaoMemberDetailsService kakaoMemberDetailsService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;

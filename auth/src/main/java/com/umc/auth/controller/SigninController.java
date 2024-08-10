@@ -3,6 +3,9 @@ package com.umc.auth.controller;
 
 import com.umc.auth.dto.TokenDto;
 import com.umc.auth.oauth2.OAuth2SuccessHandler;
+import com.umc.common.error.code.AuthErrorCode;
+import com.umc.common.error.exception.CustomException;
+import com.umc.common.response.JsendCommonResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -29,13 +32,13 @@ public class SigninController {
 
 
     @GetMapping("/reissue")
-    public ResponseEntity reissueToken(HttpServletRequest request, HttpServletResponse response) {
+    public JsendCommonResponse<TokenDto> reissueToken(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         String accessToken = (String) session.getAttribute("accessToken");
         String refreshToken = (String) session.getAttribute("refreshToken");
         response.addHeader("Authorization", accessToken);
         response.addCookie(oAuth2SuccessHandler.createCookie("refreshToken", refreshToken));
 
-        return new ResponseEntity(new TokenDto(accessToken, refreshToken), HttpStatus.OK);
+        return JsendCommonResponse.success(new TokenDto(accessToken, refreshToken));
     }
 }

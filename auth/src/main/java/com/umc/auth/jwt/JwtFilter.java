@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -23,6 +24,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@ComponentScan(basePackages = {"com.umc.common"})
 public class JwtFilter extends OncePerRequestFilter {
 
     private static final String ACCESS_HEADER = "AccessToken";
@@ -63,7 +65,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     Boolean isRequestPassURI(HttpServletRequest request) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/")) {
+        if (request.getRequestURI().startsWith("/") || request.getRequestURI().startsWith("/")) {
             return true;
         }
         else if (request.getRequestURI().startsWith("/access_token")) {

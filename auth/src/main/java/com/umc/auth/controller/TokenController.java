@@ -5,6 +5,7 @@ import com.umc.auth.jwt.AccessTokenProvider;
 import com.umc.auth.jwt.JwtFilter;
 import com.umc.auth.jwt.TokenProvider;
 import com.umc.auth.oauth2.OAuth2SuccessHandler;
+import com.umc.common.response.JsendCommonResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,11 +26,14 @@ public class TokenController {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final AccessTokenProvider accessTokenProvider;
     private static final String REFRESH_HEADER = "RefreshToken";
+    private static final String ACCESS_HEADER = "AccessToken";
 
     @GetMapping("/access_token")
-    public ResponseEntity<TokenDto> access_token(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public JsendCommonResponse<String> access_token(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String refreshToken = request.getHeader(REFRESH_HEADER);
+        System.out.println(refreshToken);
         TokenDto tokenDto = accessTokenProvider.issueAccessToken(refreshToken);
-        return ResponseEntity.ok(tokenDto);
+        response.addHeader(ACCESS_HEADER, tokenDto.getAccessToken());
+        return JsendCommonResponse.success("AccessToken을 발급했습니다. ");
     }
 }
