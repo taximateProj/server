@@ -8,6 +8,8 @@ import com.umc.auth.dto.oauth2dto.OAuth2Response;
 import com.umc.auth.entity.AuthMember;
 import com.umc.auth.entity.enums.Role;
 import com.umc.auth.repository.AuthMemberRepository;
+import com.umc.common.error.code.AuthErrorCode;
+import com.umc.common.error.exception.CustomException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,13 +59,17 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
 
             AuthMemberDto authmemberDto = new AuthMemberDto();
             authmemberDto.setUsername(username);
-            authmemberDto.setRole("not_signup_user");
-
+            authmemberDto.setRole("NOT_SIGNUP_USER");
 
             return new CustomOAuth2User(authmemberDto);
         } else if (existData.getRole().equals(Role.NOT_SIGNUP_USER)) {
+            AuthMemberDto authmemberDto = new AuthMemberDto();
+            authmemberDto.setUuid(existData.getUuid());
+            authmemberDto.setUsername(username);
+            authmemberDto.setRole("NOT_SIGNUP_USER");
+            authmemberDto.setEmail(existData.getEmail());
             // 가입되지 않은 유저 - 가입 화면으로 리다이렉트
-            return null; // -> 오류 반환해줘야하나?
+            return new CustomOAuth2User(authmemberDto);
 
         } else { // 왜 있을 때는 다시 set 하지?? 그냥 이미 있는 유저라고 반환해야되는거 아닌가? -> login 하면서 회원 정보 update 해주는 정책 (이거는 정해야할듯?)
             System.out.println("I login!");
@@ -71,8 +77,8 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
             existData.setEmail(oAuth2Response.getEmail());
             authmemberRepository.save(existData);
 
-            AuthMemberDto memberDto = new AuthMemberDto();
-            memberDto.setUsername(username);
+            AuthMemberDto authMemberDto = new AuthMemberDto();
+            authMemberDto.setUsername(username);
 
             String role;
             if (existData.getRole().equals(Role.USER)) {
@@ -80,9 +86,9 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
             } else {
                 role = "admin";
             }
-            memberDto.setRole(role);
+            authMemberDto.setRole(role);
 
-            return new CustomOAuth2User(memberDto);
+            return new CustomOAuth2User(authMemberDto);
         }
 
 //        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(member.getRole().name());

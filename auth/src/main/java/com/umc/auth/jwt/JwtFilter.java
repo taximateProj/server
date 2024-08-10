@@ -57,15 +57,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 redirectReissueURI(request, response, tokenDto);
             } else {
-                throw new CustomException(AuthErrorCode.INVALID_TOKEN_FORMAT);
+                throw new CustomException(AuthErrorCode.INVALID_REFRESH_TOKEN_FORMAT);
             }
+        } else {
+            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }
 
         filterChain.doFilter(request, response);
     }
 
     Boolean isRequestPassURI(HttpServletRequest request) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/") || request.getRequestURI().startsWith("/signup")) {
+        if (request.getRequestURI().startsWith("/")) {
             return true;
         }
         else if (request.getRequestURI().startsWith("/access_token")) {

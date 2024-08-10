@@ -1,5 +1,6 @@
 package com.umc.auth.entity;
 
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RedisHash(value = "refresh", timeToLive = 604800)
 public class RefreshToken {
 
+    @Id
     private String id;
     private Collection<? extends GrantedAuthority> authorities;
 

@@ -37,5 +37,4 @@ public class TokenController {
         response.addHeader(ACCESS_HEADER, tokenDto.getAccessToken());
         return ResponseEntity.ok(tokenDto);
     }
-
 }

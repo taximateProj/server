@@ -5,6 +5,9 @@ import com.umc.auth.dto.TokenDto;
 import com.umc.auth.dto.oauth2dto.KakaoMemberDetails;
 import com.umc.auth.entity.RefreshToken;
 import com.umc.auth.repository.RefreshTokenRedisRepository;
+import com.umc.common.TokenValidation;
+import com.umc.common.error.code.AuthErrorCode;
+import com.umc.common.error.exception.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,6 +15,8 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,22 +36,25 @@ public class TokenProvider {
 
     private static final String AUTH_KEY = "AUTHORITY";
     private static final String AUTH_UUID = "UUID";
+    private static final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
     private final String secretKey_string;
     private final long accessTokenValidityMilliSeconds;
     private final long refreshTokenValidityMilliSeconds;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
+    private final TokenValidation tokenValidation;
 
     private Key secretkey;
 
 
     public TokenProvider(@Value("${spring.jwt.secret_key}") String secretKey,
                          @Value("${spring.jwt.access-token-validity-in-seconds}") long accessTokenValiditySeconds,
-                         @Value("${spring.jwt.refresh-token-validity-in-seconds}") long refreshTokenValiditySeconds, RefreshTokenRedisRepository refreshTokenRedisRepository) {
+                         @Value("${spring.jwt.refresh-token-validity-in-seconds}") long refreshTokenValiditySeconds, RefreshTokenRedisRepository refreshTokenRedisRepository, TokenValidation tokenValidation) {
         this.secretKey_string = secretKey;
         this.accessTokenValidityMilliSeconds = accessTokenValiditySeconds * 1000;
         this.refreshTokenValidityMilliSeconds = refreshTokenValiditySeconds * 1000;
         this.refreshTokenRedisRepository = refreshTokenRedisRepository;
+        this.tokenValidation = tokenValidation;
     }
 
     @PostConstruct
@@ -112,8 +120,14 @@ public class TokenProvider {
     @Transactional
     public TokenDto reIssueAccessToken(String refreshToken) {
         RefreshToken findToken = refreshTokenRedisRepository.findByRefreshToken(refreshToken);
+        if (findToken == null) {
+            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        }
+        String string_uuid = tokenValidation.getUuid(findToken.getRefreshToken());
+        String role = tokenValidation.getRole(findToken.getRefreshToken());
+        log.info("uuid: {}, role: {}", string_uuid, role);
 
-        TokenDto tokenDto = createToken(findToken.getId(), findToken.getAuthority());
+        TokenDto tokenDto = createToken(string_uuid, role);
         refreshTokenRedisRepository.save(RefreshToken.builder()
                 .id(findToken.getId())
                 .authorities(findToken.getAuthorities())

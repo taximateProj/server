@@ -73,8 +73,6 @@ public class SignupController {
         // MemberJoinDto로 만들기 -> 서비스 단에 전달
         MemberJoinDto memberJoinDto = objectMapper.readValue(request.getReader().lines().collect(Collectors.joining()), MemberJoinDto.class); // request -> MemberJoinDto
 
-        System.out.println(memberJoinDto.getSchool());
-
         SignupEventMessageDto signupEventMessageDto = signupService.joinMember(memberJoinDto, uuid);
 
         // 가져오는 것 완료!

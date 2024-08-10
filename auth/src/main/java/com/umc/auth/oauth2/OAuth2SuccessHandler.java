@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -40,13 +41,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-        System.out.println(customOAuth2User.getName());
+        System.out.println(customOAuth2User.getUuid());
 
-        String username = customOAuth2User.getName();
+        UUID uuid = customOAuth2User.getUuid();
 
-        AuthMember member = memberRepository.findByUsername(username);// username이 키
+        AuthMember member = memberRepository.findByUuid(uuid);// username이 키
         if (member == null) {
-            throw new CustomException(AuthErrorCode.ALREADY_SIGNEDUP_USER);
+            throw new CustomException(AuthErrorCode.MEMBER_NOT_FOUND);
         }
 
         TokenDto tokenDto = tokenProvider.createToken(member.getUuid().toString(), member.getRole().name());
@@ -77,7 +78,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
         simpleGrantedAuthorities.add(new SimpleGrantedAuthority(member.getRole().name()));
         refreshTokenRepository.save(RefreshToken.builder()
-                .id(member.getUuid().toString())
                 .authorities(simpleGrantedAuthorities)
                 .refreshToken(tokenDto.getRefreshToken())
                 .build());

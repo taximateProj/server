@@ -20,8 +20,12 @@ public class AccessTokenProvider {
 
     public TokenDto issueAccessToken(String refreshToken) {
 
-        if (!tokenValidation.validateToken(refreshToken) || refreshTokenRedisRepository.findByRefreshToken(refreshToken) == null) {
+        if (!tokenValidation.validateToken(refreshToken)) {
             throw new CustomException(AuthErrorCode.INVALID_REFRESH_TOKEN_FORMAT);
+        } else if (!tokenValidation.validateExpiredToken(refreshToken))  {
+            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_EXPIRED);
+        } else if (refreshTokenRedisRepository.findByRefreshToken(refreshToken) == null) {
+            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND);
         } else {
             TokenDto tokenDto = tokenProvider.reIssueAccessToken(refreshToken);
             return tokenDto;
