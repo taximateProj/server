@@ -48,6 +48,12 @@ public class SignupController {
         String refreshToken = request.getHeader("RefreshToken");
         System.out.println(accessToken);
 
+        if (!tokenValidation.validateToken(refreshToken)) {
+            throw new CustomException(AuthErrorCode.INVALID_REFRESH_TOKEN_FORMAT);
+        } else if (!tokenValidation.validateExpiredToken(refreshToken)) {
+            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_EXPIRED);
+        }
+
         String uuid = tokenValidation.getUuid(accessToken);
         System.out.println(uuid);
 
@@ -58,16 +64,6 @@ public class SignupController {
         log.info("role: {} and uuid:{}", role, uuid);
         System.out.println(role);
         System.out.println(uuid);
-
-
-
-
-
-//        if (!role.equals("NOT_SIGNUP_USER")) {
-//            throw new CustomException(AuthErrorCode.ALREADY_SIGNEDUP_USER);
-//        }
-
-
 
 
         log.info("make memberJoinDto");
@@ -82,6 +78,7 @@ public class SignupController {
         System.out.println(signupEventMessageDto);
         System.out.println(signupEventMessageDto.getSchool());
         System.out.println(signupEventMessageDto.getName());
+        System.out.println(signupEventMessageDto.getGender());
 
         TokenDto tokenDto = tokenProvider.signupIssueToken(accessToken, refreshToken);
 

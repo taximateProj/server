@@ -64,8 +64,11 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
                     .email(oAuth2Response.getEmail())
                     .username(username)
                     .build());
+            AuthMember authMember = authmemberRepository.findByUsername(username);
 
             AuthMemberDto authmemberDto = new AuthMemberDto();
+
+            authmemberDto.setUuid(authMember.getUuid());
             authmemberDto.setUsername(username);
             authmemberDto.setRole("NOT_SIGNUP_USER");
             authmemberDto.setEmail(oAuth2Response.getEmail());
@@ -73,21 +76,26 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
             return new CustomOAuth2User(authmemberDto);
 
         } else if (existData.getRole().equals(Role.NOT_SIGNUP_USER)) {
+
             AuthMemberDto authmemberDto = new AuthMemberDto();
+
             authmemberDto.setUuid(existData.getUuid());
             authmemberDto.setUsername(username);
             authmemberDto.setRole("NOT_SIGNUP_USER");
             authmemberDto.setEmail(existData.getEmail());
+
             // 가입되지 않은 유저 - 가입 화면으로 리다이렉트
             return new CustomOAuth2User(authmemberDto);
 
         } else { // 왜 있을 때는 다시 set 하지?? 그냥 이미 있는 유저라고 반환해야되는거 아닌가? -> login 하면서 회원 정보 update 해주는 정책 (이거는 정해야할듯?)
             System.out.println("I login!");
+
             existData.setUsername(username);
             existData.setEmail(oAuth2Response.getEmail());
             authmemberRepository.save(existData);
 
             AuthMemberDto authMemberDto = new AuthMemberDto();
+
             authMemberDto.setUsername(username);
 
             String role;

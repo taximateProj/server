@@ -55,8 +55,8 @@
 
 
     jwt:
-      secret_key: fhdusjsiealkasdkfjdkjfhkjdhkfadhskjfhskdjhksdjhksfjdhwere
-      access-token-validity-in-seconds: 30000
+      secret_key: ${JWT_SECRET_KEY}
+      access-token-validity-in-seconds: 5000
       refresh-token-validity-in-seconds: 86400 #(1일)
 
 

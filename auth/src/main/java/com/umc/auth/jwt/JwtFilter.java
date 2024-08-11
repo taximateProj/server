@@ -36,41 +36,28 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (isRequestPassURI(request)) {
+            System.out.println("passing jwtFilter");
             filterChain.doFilter(request, response);
             return;
         }
 
         String accessToken = getTokenFromHeader(request, ACCESS_HEADER);
 
-        if (tokenValidation.validateToken(accessToken) && tokenValidation.validateExpiredToken(accessToken)) {
-            SecurityContextHolder.getContext().setAuthentication(tokenProvider.getAuthentication(accessToken));
-        }
-        if (!tokenValidation.validateExpiredToken(accessToken) && tokenValidation.validateToken(accessToken) && getTokenFromHeader(request, REFRESH_HEADER) == null) {
+        if (!tokenValidation.validateToken(accessToken)) {
+            throw new CustomException(AuthErrorCode.INVALID_TOKEN_FORMAT);
+
+        } else if (!tokenValidation.validateExpiredToken(accessToken)) {
             throw new CustomException(AuthErrorCode.TOKEN_EXPIRED);
-        };
-        if (!tokenValidation.validateExpiredToken(accessToken) && tokenValidation.validateToken(accessToken) && getTokenFromHeader(request, REFRESH_HEADER) != null) {// token 검사하는 로직 다시 보기
-            String refreshToken = getTokenFromHeader(request, REFRESH_HEADER);
 
-            if (tokenValidation.validateToken(refreshToken) && tokenValidation.validateExpiredToken(refreshToken)) {
-                TokenDto tokenDto = tokenProvider.reIssueAccessToken(refreshToken);
-                SecurityContextHolder.getContext().setAuthentication(tokenProvider.getAuthentication(tokenDto.getAccessToken()));
-
-                redirectReissueURI(request, response, tokenDto);
-            } else {
-                throw new CustomException(AuthErrorCode.INVALID_REFRESH_TOKEN_FORMAT);
-            }
-        } else {
-            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND);
-        }
+        } else if (tokenValidation.validateToken(accessToken) && tokenValidation.validateExpiredToken(accessToken)) {
+             SecurityContextHolder.getContext().setAuthentication(tokenProvider.getAuthentication(accessToken));
+         }
 
         filterChain.doFilter(request, response);
     }
 
     Boolean isRequestPassURI(HttpServletRequest request) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/")) {
-            return true;
-        }
-        else if (request.getRequestURI().startsWith("/access_token")) {
+        if (request.getRequestURI().startsWith("/access_token")) {
             return true;
         }
         return false;

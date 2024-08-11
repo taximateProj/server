@@ -6,6 +6,8 @@ import com.umc.auth.dto.memberdto.MemberJoinDto;
 import com.umc.auth.entity.AuthMember;
 import com.umc.auth.entity.enums.Role;
 import com.umc.auth.repository.AuthMemberRepository;
+import com.umc.common.error.code.CommonErrorCode;
+import com.umc.common.error.exception.CustomException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,15 @@ public class SignupService {
 
     @Transactional
     public SignupEventMessageDto joinMember(MemberJoinDto request, String uuid) {
-
+        System.out.println("this is uuid : ");
+        System.out.println(uuid);
         AuthMember authMember = authMemberRepository.findByUuid(UUID.fromString(uuid));
+        if (authMember == null) {
+            throw new CustomException(CommonErrorCode.NOT_FOUND);
+        }
+
         authMember.setRole(Role.USER);
+        authMemberRepository.save(authMember);
 
         return SignupEventMessageDto.builder()
                 .uuid(UUID.fromString(uuid))

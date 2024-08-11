@@ -1,6 +1,5 @@
 package com.umc.auth.oauth2;
 
-
 import com.umc.auth.dto.TokenDto;
 import com.umc.auth.dto.oauth2dto.CustomOAuth2User;
 import com.umc.auth.entity.AuthMember;
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Component
@@ -37,17 +35,20 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final TokenProvider tokenProvider;
     private final AuthMemberRepository memberRepository;
     private final RefreshTokenRedisRepository refreshTokenRepository;
+    private static final String REFRESH_HEADER = "RefreshToken";
 
     //로그인 성공 후 처리할 로직 - JWT 토큰 생성 후 응답 헤더에 추가
     @Transactional
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         log.info("customOAuthUser {}, uuid {}, email {}", customOAuth2User, customOAuth2User.getUuid(), customOAuth2User.getName());
 
         String userName = customOAuth2User.getName();
 
         AuthMember member = memberRepository.findByUsername(userName);// username이 키
+
         if (member == null) {
             throw new CustomException(AuthErrorCode.MEMBER_NOT_FOUND);
         }
@@ -56,7 +57,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         saveRefreshTokenOnRedis(member, tokenDto);
 
-        response.addCookie(createCookie("Authorization", tokenDto.getRefreshToken())); // token 어떤 식으로 넘겨줘야 되는지?
+        response.addCookie(createCookie(REFRESH_HEADER, tokenDto.getRefreshToken())); // token 어떤 식으로 넘겨줘야 되는지?
 
         if (member.getRole().equals(Role.NOT_SIGNUP_USER)) {
             response.sendRedirect("http://localhost:3000/signup");

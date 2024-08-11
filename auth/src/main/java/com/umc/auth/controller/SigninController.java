@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SigninController {
 
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private static final String REFRESH_HEADER = "RefreshToken";
 
     @GetMapping("/login/kakao")
     public JsendCommonResponse<TokenDto> loginKakao(@RequestParam(name = "accessToken") String accessToken,
@@ -36,8 +37,7 @@ public class SigninController {
         HttpSession session = request.getSession();
         String accessToken = (String) session.getAttribute("accessToken");
         String refreshToken = (String) session.getAttribute("refreshToken");
-        response.addHeader("Authorization", accessToken);
-        response.addCookie(oAuth2SuccessHandler.createCookie("refreshToken", refreshToken));
+        response.addCookie(oAuth2SuccessHandler.createCookie(REFRESH_HEADER, refreshToken));
 
         return JsendCommonResponse.success(new TokenDto(accessToken, refreshToken));
     }

@@ -12,11 +12,13 @@ public class MemberJoinDto {
     private String name;
     private String school;
     private String accountNumber;
+    private String gender;
 
     @Builder
-    public MemberJoinDto(String name, String school, String accountNumber) {
+    public MemberJoinDto(String name, String school, String accountNumber, String gender) {
         this.name = name;
         this.school = school;
         this.accountNumber = accountNumber;
+        this.gender = gender;
     }
 }

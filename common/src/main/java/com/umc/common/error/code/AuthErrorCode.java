@@ -18,6 +18,8 @@ public enum AuthErrorCode implements ErrorCode{
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "AUTH-006", "쿠키에 refreshToken이 없습니다."),
     INVALID_REFRESH_TOKEN_FORMAT(HttpStatus.BAD_REQUEST, "AUTH-007", "잘못된 리프레쉬 토큰 형식입니다."),
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "AUTH-008", "리프레쉬 토큰의 유효기간이 만료되었습니다."),
+    NO_ACCESS_TOKEN(HttpStatus.BAD_REQUEST, "AUTH-009", "AccessToken이 없습니다."),
+    NO_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "AUTH-010", "RefreshToken이 없습니다."),
     // 추가 가입 절차
     ALREADY_SIGNEDUP_USER(HttpStatus.FORBIDDEN, "SIGNUP-001", "이미 가입된 사용자 입니다."),
     NOT_SIGNEDUP_USER(HttpStatus.FORBIDDEN, "SIGNUP-002", "아직 가입이 완료되지 않은 사용자 입니다. "),

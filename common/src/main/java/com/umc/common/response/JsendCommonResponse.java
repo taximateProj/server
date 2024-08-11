@@ -1,11 +1,14 @@
 package com.umc.common.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class JsendCommonResponse<T> {
+    @JsonProperty
     private String status;
+    @JsonProperty
     private T data;
 
     public static <T> JsendCommonResponse<T> success(T data) {

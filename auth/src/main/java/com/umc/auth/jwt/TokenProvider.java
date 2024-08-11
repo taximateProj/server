@@ -142,6 +142,16 @@ public class TokenProvider {
 
     @Transactional
     public TokenDto signupIssueToken(String accessToken, String refreshToken) {
+        if (accessToken == null) {
+            throw new CustomException(AuthErrorCode.NO_ACCESS_TOKEN);
+        } else if (refreshToken == null) {
+            throw new CustomException(AuthErrorCode.NO_REFRESH_TOKEN);
+        } else if (!tokenValidation.validateToken(refreshToken)) {
+            throw new CustomException(AuthErrorCode.INVALID_REFRESH_TOKEN_FORMAT);
+        } else if (!tokenValidation.validateExpiredToken(refreshToken)) {
+            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_EXPIRED);
+        }
+
         RefreshToken findToken = refreshTokenRedisRepository.findByRefreshToken(refreshToken);
         log.info("found refreshToken: {}", refreshToken);
 

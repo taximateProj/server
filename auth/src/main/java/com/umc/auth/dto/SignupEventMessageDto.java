@@ -24,4 +24,6 @@ public class SignupEventMessageDto { // 카프카로 보낼 메시지
     private String accountNumber;
 
     private Role role;
+
+    private String gender;
 }
