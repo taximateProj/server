@@ -95,6 +95,7 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
                 role = "admin";
             }
             authMemberDto.setRole(role);
+            authMemberDto.setUuid(existData.getUuid());
 
             return new CustomOAuth2User(authMemberDto);
         }

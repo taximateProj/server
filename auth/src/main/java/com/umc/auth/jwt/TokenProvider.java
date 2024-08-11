@@ -4,6 +4,7 @@ package com.umc.auth.jwt;
 import com.umc.auth.dto.TokenDto;
 import com.umc.auth.dto.oauth2dto.KakaoMemberDetails;
 import com.umc.auth.entity.RefreshToken;
+import com.umc.auth.entity.enums.Role;
 import com.umc.auth.repository.RefreshTokenRedisRepository;
 import com.umc.common.TokenValidation;
 import com.umc.common.error.code.AuthErrorCode;
@@ -127,6 +128,28 @@ public class TokenProvider {
         }
         String string_uuid = tokenValidation.getUuid(findToken.getRefreshToken());
         String role = tokenValidation.getRole(findToken.getRefreshToken());
+        log.info("uuid: {}, role: {}", string_uuid, role);
+
+        TokenDto tokenDto = createToken(string_uuid, role);
+        refreshTokenRedisRepository.save(RefreshToken.builder()
+                .id(findToken.getId())
+                .authorities(findToken.getAuthorities())
+                .refreshToken(tokenDto.getRefreshToken())
+                .build());
+
+        return tokenDto;
+    }
+
+    @Transactional
+    public TokenDto signupIssueToken(String accessToken, String refreshToken) {
+        RefreshToken findToken = refreshTokenRedisRepository.findByRefreshToken(refreshToken);
+        log.info("found refreshToken: {}", refreshToken);
+
+        if (findToken == null) {
+            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        }
+        String string_uuid = tokenValidation.getUuid(findToken.getRefreshToken());
+        String role = "USER";
         log.info("uuid: {}, role: {}", string_uuid, role);
 
         TokenDto tokenDto = createToken(string_uuid, role);

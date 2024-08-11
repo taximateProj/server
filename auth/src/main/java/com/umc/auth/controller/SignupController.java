@@ -6,6 +6,7 @@ import com.umc.auth.dto.SignupEventMessageDto;
 import com.umc.auth.dto.TokenDto;
 import com.umc.auth.dto.memberdto.MemberJoinDto;
 import com.umc.auth.entity.enums.Role;
+import com.umc.auth.jwt.TokenProvider;
 import com.umc.common.TokenValidation;
 import com.umc.auth.service.SignupService;
 import com.umc.common.error.code.AuthErrorCode;
@@ -31,6 +32,7 @@ public class SignupController {
     private final SignupService signupService;
     private final TokenValidation tokenValidation;
     private final ObjectMapper objectMapper;
+    private final TokenProvider tokenProvider;
 
 //    SignupController(ObjectMapper objectMapper) {
 //
@@ -38,11 +40,12 @@ public class SignupController {
 //    }
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupEventMessageDto> SignUp(HttpServletRequest request) throws IOException{
+    public ResponseEntity<TokenDto> SignUp(HttpServletRequest request) throws IOException{
         // 레포지토리에 저장되어 있는 멤버불러와서 같이 dto로 넘기는 방식?
 //        AuthMember authMember = signupService.joinMember(request);
         // 헤더에 access 토큰 있다고 가정 - 헤더의 토큰 롤 검사 -> 롤이 not sign up user 이면 가입 절차 진행
         String accessToken = request.getHeader("AccessToken"); // jwt 열어서 롤 확인해야되는데 어떻게 하지?
+        String refreshToken = request.getHeader("RefreshToken");
         System.out.println(accessToken);
 
         String uuid = tokenValidation.getUuid(accessToken);
@@ -80,6 +83,8 @@ public class SignupController {
         System.out.println(signupEventMessageDto.getSchool());
         System.out.println(signupEventMessageDto.getName());
 
-        return ResponseEntity.ok(signupEventMessageDto);
+        TokenDto tokenDto = tokenProvider.signupIssueToken(accessToken, refreshToken);
+
+        return ResponseEntity.ok(tokenDto);
     }
 }
