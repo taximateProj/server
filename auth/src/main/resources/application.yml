@@ -47,7 +47,7 @@
           provider:
             kakao:
               authorization-uri: ${KAKAO_AUTHORIZATION_URI}
-              token-uri: ${KAKAO_TOKEN_URI}
+              token-uri: ${KAKAO_TOKEN_URI}ㄹ
               user-info-uri: ${KAKAO_USER_INFO_URI}
               user-name-attribute: id
 
