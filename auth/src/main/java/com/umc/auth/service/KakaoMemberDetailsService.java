@@ -32,8 +32,9 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
+
         if (oAuth2User == null) {
-            log.error("OAuth2User is null");
+            throw new CustomException(AuthErrorCode.LOGIN_FAILED);
         }
 
 
