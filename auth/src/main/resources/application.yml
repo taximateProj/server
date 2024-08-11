@@ -1,0 +1,69 @@
+
+  server:
+    port: 8080
+  spring:
+    config:
+      import: optional:file:.env[.properties]
+
+    datasource:
+      url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB}
+      username: ${MYSQL_USER}
+      password: ${MYSQL_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      redis:
+        host: ${REDIS_HOST}
+        port: ${REDIS_PORT}
+        password: ${REDIS_PASSWORD}
+
+
+    sql:
+      init:
+        mode: never
+    jpa:
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQL8Dialect
+          show_sql: true
+          format_sql: true
+          use_sql_comments: true
+          hbm2ddl:
+            auto: create
+          default_batch_fetch_size: 1000
+
+    security:
+      oauth2:
+        client:
+          registration:
+            kakao:
+              client-id: ${KAKAO_CLIENT_ID}
+              client-secret: ${KAKAO_CLIENT_SECRET}
+              client-authentication-method: client_secret_post
+              redirect-uri: ${KAKAO_REDIRECT_URL}
+              authorization-grant-type: authorization_code
+              client-name: Kakao
+              scope:
+                - profile_nickname
+                - account_email
+          provider:
+            kakao:
+              authorization-uri: ${KAKAO_AUTHORIZATION_URI}
+              token-uri: ${KAKAO_TOKEN_URI}
+              user-info-uri: ${KAKAO_USER_INFO_URI}
+              user-name-attribute: id
+
+
+
+
+    jwt:
+      secret_key: fhdusjsiealkasdkfjdkjfhkjdhkfadhskjfhskdjhksdjhksfjdhwere
+      access-token-validity-in-seconds: 30000
+      refresh-token-validity-in-seconds: 86400 #(1일)
+
+
+
+
+  logging:
+    level:
+      root: debug
+
+
