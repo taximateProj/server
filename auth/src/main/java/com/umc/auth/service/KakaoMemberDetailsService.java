@@ -67,6 +67,7 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
             AuthMemberDto authmemberDto = new AuthMemberDto();
             authmemberDto.setUsername(username);
             authmemberDto.setRole("NOT_SIGNUP_USER");
+            authmemberDto.setEmail(oAuth2Response.getEmail());
 
             return new CustomOAuth2User(authmemberDto);
 

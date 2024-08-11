@@ -43,11 +43,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-        log.info("customOAuthUser {}, uuid {}", customOAuth2User, customOAuth2User.getUuid());
+        log.info("customOAuthUser {}, uuid {}, email {}", customOAuth2User, customOAuth2User.getUuid(), customOAuth2User.getName());
 
-        UUID uuid = customOAuth2User.getUuid();
+        String userName = customOAuth2User.getName();
 
-        AuthMember member = memberRepository.findByUuid(uuid);// username이 키
+        AuthMember member = memberRepository.findByUsername(userName);// username이 키
         if (member == null) {
             throw new CustomException(AuthErrorCode.MEMBER_NOT_FOUND);
         }
