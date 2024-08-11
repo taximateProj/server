@@ -3,6 +3,7 @@ package com.umc.auth.service;
 
 import com.umc.auth.dto.memberdto.AuthMemberDto;
 import com.umc.auth.dto.oauth2dto.CustomOAuth2User;
+import com.umc.auth.dto.oauth2dto.KakaoMemberDetails;
 import com.umc.auth.dto.oauth2dto.KakaoResponseDto;
 import com.umc.auth.dto.oauth2dto.OAuth2Response;
 import com.umc.auth.entity.AuthMember;
@@ -42,8 +43,14 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
         log.info("Username is {}", username);
 
+
         AuthMember existData = authmemberRepository.findByUsername(username);
         System.out.println(existData);
+        System.out.println("Kakao Member Details printing role.......");
+//        log.info("user's username is {}", existData.getUsername());
+//        log.info("user's uuid is {}", existData.getUuid());
+//        log.info("user's role is {}", existData.getRole());
+
 
 
 
@@ -62,6 +69,7 @@ public class KakaoMemberDetailsService extends DefaultOAuth2UserService {
             authmemberDto.setRole("NOT_SIGNUP_USER");
 
             return new CustomOAuth2User(authmemberDto);
+
         } else if (existData.getRole().equals(Role.NOT_SIGNUP_USER)) {
             AuthMemberDto authmemberDto = new AuthMemberDto();
             authmemberDto.setUuid(existData.getUuid());

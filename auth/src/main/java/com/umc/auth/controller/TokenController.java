@@ -37,4 +37,15 @@ public class TokenController {
         response.addHeader(ACCESS_HEADER, tokenDto.getAccessToken());
         return ResponseEntity.ok(tokenDto);
     }
+
+    @GetMapping("/reissue_token")
+    public ResponseEntity<TokenDto> reissue_token(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String refreshToken = request.getHeader(REFRESH_HEADER);
+        String accessToken = request.getHeader(ACCESS_HEADER);
+        System.out.println(refreshToken);
+        TokenDto tokenDto = accessTokenProvider.reissueAccessToken(refreshToken, accessToken);
+        response.addHeader(ACCESS_HEADER, tokenDto.getAccessToken());
+        return ResponseEntity.ok(tokenDto);
+    }
+
 }

@@ -120,6 +120,8 @@ public class TokenProvider {
     @Transactional
     public TokenDto reIssueAccessToken(String refreshToken) {
         RefreshToken findToken = refreshTokenRedisRepository.findByRefreshToken(refreshToken);
+        log.info("found refreshToken: {}", refreshToken);
+
         if (findToken == null) {
             throw new CustomException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }

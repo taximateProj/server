@@ -31,4 +31,21 @@ public class AccessTokenProvider {
             return tokenDto;
         }
     }
+
+    public TokenDto reissueAccessToken(String refreshToken, String accessToken) {
+        if (!tokenValidation.validateToken(accessToken)) {
+            throw new CustomException(AuthErrorCode.INVALID_TOKEN_FORMAT);
+        } else if (!tokenValidation.validateToken(refreshToken)) {
+            throw new CustomException(AuthErrorCode.INVALID_REFRESH_TOKEN_FORMAT);
+        } else if (!tokenValidation.validateExpiredToken(refreshToken))  {
+            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_EXPIRED);
+        } else if (refreshTokenRedisRepository.findByRefreshToken(refreshToken) == null) {
+            throw new CustomException(AuthErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        } else {
+            TokenDto tokenDto = tokenProvider.reIssueAccessToken(refreshToken);
+            return tokenDto;
+        }
+    }
+
+
 }
