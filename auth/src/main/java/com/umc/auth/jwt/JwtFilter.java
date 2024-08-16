@@ -57,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     Boolean isRequestPassURI(HttpServletRequest request) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/access_token")) {
+        if (request.getRequestURI().startsWith("/access_token") || request.getRequestURI().startsWith("/kakao_logout") || request.getRequestURI().startsWith("/login")) {
             return true;
         }
         return false;

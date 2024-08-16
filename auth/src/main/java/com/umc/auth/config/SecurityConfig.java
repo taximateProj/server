@@ -20,7 +20,6 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-@PropertySource("classpath:.env")
 public class SecurityConfig {
     private final KakaoMemberDetailsService kakaoMemberDetailsService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;

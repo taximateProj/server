@@ -54,6 +54,8 @@ spring:
 
 
 
+
+
   jwt:
     secret_key: fhdusjsiealkasdkfjdkjfhkjdhkfadhskjfhskdjhksdjhksfjdhwere
     access-token-validity-in-seconds: 30000
@@ -65,3 +67,5 @@ spring:
 logging:
   level:
     root: debug
+
+
